@@ -515,6 +515,14 @@ class ManyToOneTests(TestCase):
         with self.assertRaisesMessage(ValueError, msg):
             ToFieldChild.objects.create(parent=p)
 
+        # Create parent and child, save parent, save child, parent_id should be set (#28147)
+        p = Parent.objects.create(name="Parent for 28147")
+        c = Child(parent=p)
+        p.save()
+        c.save()
+        c.refresh_from_db()
+        self.assertIs(c.parent, p)
+
         # Creation using attname keyword argument and an id will cause the
         # related object to be fetched.
         p = Parent.objects.get(name="Parent")

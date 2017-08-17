@@ -997,6 +997,9 @@ class OneToOneField(ForeignKey):
         if isinstance(data, self.remote_field.model):
             setattr(instance, self.name, data)
         else:
+            if data is None:
+                setattr(instance, self.name, data)
+
             setattr(instance, self.attname, data)
 
     def _check_unique(self, **kwargs):
